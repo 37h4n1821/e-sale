@@ -23,7 +23,9 @@ chrome_options.add_argument("--log-level=3")
 chrome_options.add_argument("--silent")
 chrome_options.add_argument("--output=/dev/null")
 
-driver = webdriver.Chrome(options=chrome_options)
+path = './chromedriver'
+
+driver = webdriver.Chrome(options=chrome_options, executable_path= path)
 
 
 def escribir(txt):
