@@ -44,8 +44,9 @@ def extraerdatos(pagina):
     resultado=data.find('span',{"class":"jsx-3408573263"})
     ID=resultado.text.strip("Código del producto: ")
 
-    resultado=data.find('div',{"class":"jsx-3686231685"})
-    PRODUCTO=resultado.text
+    NAME=data.find('div',{"class":"product-name"}).text
+    BRAND=data.find('a',{"class":"product-brand-link"}).text
+    print(CATEGORIA)
     PRECIO=""
     PRECIO2=""
     PRECIO3=""
@@ -117,7 +118,7 @@ def extraerdatos(pagina):
             DESCRIPCION+=dato.text+" "
         DESCRIPCION+="%0A"
 
-    url="http://villaloscisnesnavidad.epizy.com/set.php?ID="+ID+"&Producto="+PRODUCTO.replace(" ","%20")+"&Precio="+PRECIO+"&Precio2="+PRECIO2+"&Precio3="+PRECIO3+"&Descripcion="+DESCRIPCION.replace(" ","%20")+"&Categoria="+CATEGORIA+"&Url="+pagina+"&Tienda=Falabella"
+    url="http://villaloscisnesnavidad.epizy.com/set.php?ID="+ID+"&Marca="+BRAND+"&Nombre="+NAME.replace(" ","%20")+"&Precio="+PRECIO+"&Precio2="+PRECIO2+"&Precio3="+PRECIO3+"&Descripcion="+DESCRIPCION.replace(" ","%20")+"&Categoria="+CATEGORIA+"&Url="+pagina+"&Tienda=Falabella"
     url=url.replace("á","%C3%A1").replace("é","%C3%A9").replace("í","%C3%AD").replace("ó","%C3%B3").replace("ú","%C3%BA").replace("ñ","%C3%B1")
 
     #print(url)
