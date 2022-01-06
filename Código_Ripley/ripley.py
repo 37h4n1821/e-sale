@@ -28,10 +28,10 @@ path = './chromedriver'
 driver = webdriver.Chrome(options=chrome_options, executable_path= path)
 
 
-def escribir(txt):
-    wr=open("falabella.html","w")
-    wr.write(txt)
-    wr.close()
+#def escribir(txt):
+#    wr=open("falabella.html","w") 
+#    wr.write(txt)
+#    wr.close()
 
 def extraerdatos(pagina):
     data = requests.get(pagina)
@@ -46,8 +46,6 @@ def extraerdatos(pagina):
 
     NAME=data.find('div',{"class":"product-name"}).text
     BRAND=data.find('a',{"class":"product-brand-link"}).text
-    print(BRAND)
-    print(NAME)
     PRECIO=""
     PRECIO2=""
     PRECIO3=""
@@ -244,6 +242,19 @@ def categoria(url):
 
 
 url="https://www.falabella.com/falabella-cl/category/{cate}{categoria}?page="
+
+url = 'https://simple.ripley.cl/tecno/celulares?source=menu&s=mdco'
+
+data = requests.get(url)
+data=data.content
+data=b(data,"lxml")
+for product in data.find_all('a',{"class":"catalog-product-item"}):
+        brand = product.find('div', {"class":"brand-logo"}).text
+        name = product.find('div', {"class":"catalog-product-details__name"}).text
+        link = product["href"]
+        print(brand)
+        print(name)
+        print('https://simple.ripley.cl' + link + '?&s=mdco')
 
 while True:
     categoria(url)
