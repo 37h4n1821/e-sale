@@ -1,8 +1,13 @@
 import sys
+from pathlib import Path
 
-sys.path.insert(0, 'Global/')
+ruta=str(Path(__file__).absolute())
+ruta=ruta.replace("\\","/")
+ruta=ruta.replace(ruta.split("/")[-2]+"/"+ruta.split("/")[-1],"")
 
-from imports import *
+sys.path.append(ruta)
+
+from Global.imports import *
 
 
 
