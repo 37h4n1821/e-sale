@@ -1,51 +1,32 @@
-import requests
-from bs4 import BeautifulSoup as b
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-import json
-import os
-from time import sleep as delay
+import sys
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--disable-crash-reporter")
-chrome_options.add_argument("--disable-extensions")
-chrome_options.add_argument("--disable-in-process-stack-traces")
-chrome_options.add_argument("--disable-logging")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument("--silent")
-chrome_options.add_argument("--output=/dev/null")
+sys.path.insert(0, 'Global/')
 
-path = './chromedriver'
-
-driver = webdriver.Chrome(options=chrome_options, executable_path= path)
+from imports import *
 
 
-#def escribir(txt):
-#    wr=open("falabella.html","w") 
-#    wr.write(txt)
-#    wr.close()
+
+def escribir(txt):
+    wr=open("falabella.html","w")
+    wr.write(txt)
+    wr.close()
 
 def extraerdatos(pagina):
     data = requests.get(pagina)
     data=data.content
     data=b(data,"lxml")
     resultado2=data.find('ol',{"class":"Breadcrumbs-module_breadcrumb__3lLwJ"})
+    CATEGORIA=""
     for navegador in resultado2.find_all("li"):
-        CATEGORIA=navegador.find("a")
-        CATEGORIA=CATEGORIA.text.replace(" ","%20")
+        texto=navegador.find("a")
+        if texto.text!="Home":
+            CATEGORIA+=texto.text+";"
     resultado=data.find('span',{"class":"jsx-3408573263"})
     ID=resultado.text.strip("Código del producto: ")
 
-    NAME=data.find('div',{"class":"product-name"}).text
-    BRAND=data.find('a',{"class":"product-brand-link"}).text
+    Nombre=data.find('div',{"class":"product-name"}).text
+    Marca=data.find('a',{"class":"product-brand-link"}).text
+    print(Nombre)
     PRECIO=""
     PRECIO2=""
     PRECIO3=""
@@ -117,10 +98,10 @@ def extraerdatos(pagina):
             DESCRIPCION+=dato.text+" "
         DESCRIPCION+="%0A"
 
-    url="http://villaloscisnesnavidad.epizy.com/set.php?ID="+ID+"&Marca="+BRAND+"&Nombre="+NAME.replace(" ","%20")+"&Precio="+PRECIO+"&Precio2="+PRECIO2+"&Precio3="+PRECIO3+"&Descripcion="+DESCRIPCION.replace(" ","%20")+"&Categoria="+CATEGORIA+"&Url="+pagina+"&Tienda=Falabella"
-    url=url.replace("á","%C3%A1").replace("é","%C3%A9").replace("í","%C3%AD").replace("ó","%C3%B3").replace("ú","%C3%BA").replace("ñ","%C3%B1")
+    url="http://villaloscisnesnavidad.epizy.com/set.php?ID="+ID+"&Marca="+Marca+"&Nombre="+Nombre+"&Precio="+PRECIO+"&Precio2="+PRECIO2+"&Precio3="+PRECIO3+"&Descripcion="+DESCRIPCION+"&Categoria="+CATEGORIA+"&Url="+pagina+"&Tienda=Falabella"
+    url=url.replace("á","%C3%A1").replace("é","%C3%A9").replace("í","%C3%AD").replace("ó","%C3%B3").replace("ú","%C3%BA").replace("ñ","%C3%B1").replace(" ","%20")
 
-    #print(url)
+    print(url)
     driver.get(url)
 
 
@@ -201,7 +182,7 @@ def categoria(url):
     data_=leer_ant()
     try:
         for cat in ["cat","CATG"]:
-            n=1
+            n=1000
             n2=1
             if data_:
                 cat=data_["CAT"]
@@ -242,19 +223,6 @@ def categoria(url):
 
 
 url="https://www.falabella.com/falabella-cl/category/{cate}{categoria}?page="
-
-url = 'https://simple.ripley.cl/tecno/celulares?source=menu&s=mdco'
-
-data = requests.get(url)
-data=data.content
-data=b(data,"lxml")
-for product in data.find_all('a',{"class":"catalog-product-item"}):
-        brand = product.find('div', {"class":"brand-logo"}).text
-        name = product.find('div', {"class":"catalog-product-details__name"}).text
-        link = product["href"]
-        print(brand)
-        print(name)
-        print('https://simple.ripley.cl' + link + '?&s=mdco')
 
 while True:
     categoria(url)

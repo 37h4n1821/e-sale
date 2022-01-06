@@ -1,37 +1,9 @@
-import requests
-from bs4 import BeautifulSoup as b
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-import json
-import os
-from time import sleep as delay
+import sys
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--disable-crash-reporter")
-chrome_options.add_argument("--disable-extensions")
-chrome_options.add_argument("--disable-in-process-stack-traces")
-chrome_options.add_argument("--disable-logging")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument("--silent")
-chrome_options.add_argument("--output=/dev/null")
+sys.path.insert(0, 'Global/')
 
-path = './chromedriver'
+from imports import *
 
-driver = webdriver.Chrome(options=chrome_options, executable_path= path)
-
-
-def escribir(txt):
-    wr=open("falabella.html","w")
-    wr.write(txt)
-    wr.close()
 
 def extraerdatos(pagina):
     data = requests.get(pagina)
@@ -46,7 +18,6 @@ def extraerdatos(pagina):
 
     NAME=data.find('div',{"class":"product-name"}).text
     BRAND=data.find('a',{"class":"product-brand-link"}).text
-    print(CATEGORIA)
     PRECIO=""
     PRECIO2=""
     PRECIO3=""
@@ -243,6 +214,19 @@ def categoria(url):
 
 
 url="https://www.falabella.com/falabella-cl/category/{cate}{categoria}?page="
+
+url = 'https://simple.ripley.cl/tecno/celulares?source=menu&s=mdco'
+
+data = requests.get(url)
+data=data.content
+data=b(data,"lxml")
+for product in data.find_all('a',{"class":"catalog-product-item"}):
+        brand = product.find('div', {"class":"brand-logo"}).text
+        name = product.find('div', {"class":"catalog-product-details__name"}).text
+        link = product["href"]
+        print(brand)
+        print(name)
+        print('https://simple.ripley.cl' + link + '?&s=mdco')
 
 while True:
     categoria(url)
