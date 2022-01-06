@@ -20,20 +20,43 @@ for i in soup.find_all('li',{'class':'js-hamburger-top-element-li'}):
 
 print(CATEGORIAS)
 
+def Get_Producto(url):
+    driver.get(url)
+    WebDriverWait(driver, 5)
+    print(url)
+    body = driver.execute_script("return document.body")
+    source = body.get_attribute('innerHTML')
+    soup = b(source, "html.parser")
+    ID=soup.find('div',{'class':'pdp-sku'}).text.replace("SKU ","")
+
+    PRECIOS=[]
+    for precio in soup.find('div',{'class':'price'}):
+        PRECIOS.append(precio.text)
+    print(PRECIOS)
+    print(ID)
+
+
+
 for categoria in CATEGORIAS:
     Productos=[]
     for n in range(5000,999999999,40):
         driver.get(url+categoria+'/?start='+str(n)+'&sz=40')
-        print(url+categoria+'/?start='+str(n)+'&sz=40')
-        WebDriverWait(driver, 2)
+        WebDriverWait(driver, 5)
         body = driver.execute_script("return document.body")
         source = body.get_attribute('innerHTML')
         soup = b(source, "html.parser")
         if len(soup.find_all('a',{'class':'js-product-layer'}))>0:
             for i in soup.find_all('a',{'class':'js-product-layer'}):
                 if not i['href'] in Productos:
-                    Productos.append(i['href'])
+                    if not "https://www.paris.cl/" in i['href']:
+                        Productos.append('https://www.paris.cl/'+i['href'])
+                    else:
+                        Productos.append(i['href'])
         else:
             break
+        break
+    for producto in Productos:
+        Get_Producto(producto)
+        continue
     print(len(Productos))
 
