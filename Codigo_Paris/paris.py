@@ -32,13 +32,21 @@ def Get_Producto(url):
     body = driver.execute_script("return document.body")
     source = body.get_attribute('innerHTML')
     soup = b(source, "html.parser")
-    ID=soup.find('div',{'class':'pdp-sku'}).text.replace("SKU ","")
+    ID=soup.find('div',{'class':'pdp-sku'}).text.replace("SKU ","").strip('\n')
 
     PRECIOS=[]
     for precio in soup.find('div',{'class':'price'}):
-        PRECIOS.append(precio.text)
+        PRECIOS.append(precio.text.replace('\n',''))
+    
+    NOMBRE=soup.find('h1',{'class':'no-pb js-product-name'}).text.strip('\n')
+
+    CATEGORIAS=soup.find_all('a',{'class':'breadcrumb-element'})
+    print(CATEGORIAS)
+
     print(PRECIOS)
     print(ID)
+    print(NOMBRE)
+
 
 
 
@@ -60,6 +68,9 @@ for categoria in CATEGORIAS:
         else:
             break
         break
+
+    Productos=list(set(Productos))
+    print(len(Productos))
     for producto in Productos:
         Get_Producto(producto)
         continue

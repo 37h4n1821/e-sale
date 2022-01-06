@@ -94,7 +94,7 @@ def extraerdatos(pagina):
             DESCRIPCION+=dato.text+" "
         DESCRIPCION+="%0A"
 
-    url="http://villaloscisnesnavidad.epizy.com/set.php?ID="+ID+"&Marca="+BRAND+"&Nombre="+NAME.replace(" ","%20")+"&Precio="+PRECIO+"&Precio2="+PRECIO2+"&Precio3="+PRECIO3+"&Descripcion="+DESCRIPCION.replace(" ","%20")+"&Categoria="+CATEGORIA+"&Url="+pagina+"&Tienda=Falabella"
+    url=SERVIDOR+"/set.php?ID="+ID+"&Marca="+BRAND+"&Nombre="+NAME.replace(" ","%20")+"&Precio="+PRECIO+"&Precio2="+PRECIO2+"&Precio3="+PRECIO3+"&Descripcion="+DESCRIPCION.replace(" ","%20")+"&Categoria="+CATEGORIA+"&Url="+pagina+"&Tienda=Falabella"
     url=url.replace("á","%C3%A1").replace("é","%C3%A9").replace("í","%C3%AD").replace("ó","%C3%B3").replace("ú","%C3%BA").replace("ñ","%C3%B1")
 
     #print(url)

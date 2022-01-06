@@ -18,6 +18,9 @@ elif sys.platform == "darwin":
 elif sys.platform == "win32":
     path = './WebDrivers/windows.exe'
 
+
+SERVIDOR='http://villaloscisnesnavidad.epizy.com'
+
 chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
