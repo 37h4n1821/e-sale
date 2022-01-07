@@ -39,7 +39,7 @@ chrome_options.add_argument("--output=/dev/null")
 
 driver = webdriver.Chrome(options=chrome_options, executable_path= path)
 driver2 = webdriver.Chrome(executable_path= path)
-
+driver2.close()
 
 def escribir(txt):
     wr=open("falabella.html","w")
@@ -52,3 +52,4 @@ def subir(Tienda="??",ID="??",Nombre="??",Marca="??",Precio="??",Precio2="??",Pr
     url=url.replace("á","%C3%A1").replace("é","%C3%A9").replace("í","%C3%AD").replace("ó","%C3%B3").replace("ú","%C3%BA").replace("ñ","%C3%B1").replace(" ","%20")
     print(url)
     driver.get(url)
+    delay(0.2)
