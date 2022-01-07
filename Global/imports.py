@@ -47,7 +47,7 @@ def escribir(txt):
     wr.close()
 
 
-def subir(Tienda,ID,Nombre,Marca,Precio,Precio2,Precio3,Descripcion,Categoria,Url,imagenes):
+def subir(Tienda="??",ID="??",Nombre="??",Marca="??",Precio="??",Precio2="??",Precio3="??",Descripcion="??",Categoria="??",Url="??",imagenes="??"):
     url=SERVIDOR+"/set.php?ID="+ID+"&Marca="+Marca+"&Nombre="+Nombre+"&Precio="+Precio+"&Precio2="+Precio2+"&Precio3="+Precio3+"&Descripcion="+Descripcion+"&Categoria="+Categoria+"&Url="+Url+"&Imagenes="+imagenes+"&Tienda="+Tienda
     url=url.replace("á","%C3%A1").replace("é","%C3%A9").replace("í","%C3%AD").replace("ó","%C3%B3").replace("ú","%C3%BA").replace("ñ","%C3%B1").replace(" ","%20")
     print(url)

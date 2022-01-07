@@ -100,9 +100,10 @@ def extraerdatos(pagina):
     DESCRIPCION=""
     for tabla in resultado.find_all('tr',{"class":"jsx-428502957"}):
         for dato in tabla.find_all('td',{"class":"jsx-428502957"}):
-            DESCRIPCION+=dato.text+" "
-        DESCRIPCION+="%0A"
+            DESCRIPCION+=dato.text+";"
+        DESCRIPCION+="\n"
 
+    subir("Falabella",ID,Nombre,Marca,PRECIO,PRECIO2,PRECIO3,DESCRIPCION,CATEGORIA,pagina,";")
     
 
 
