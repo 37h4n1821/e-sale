@@ -1,31 +1,13 @@
-import requests
-from bs4 import BeautifulSoup as b
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
-import json
-import os
-from time import sleep as delay
+import sys
+from pathlib import Path
 
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--disable-crash-reporter")
-chrome_options.add_argument("--disable-extensions")
-chrome_options.add_argument("--disable-in-process-stack-traces")
-chrome_options.add_argument("--disable-logging")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--log-level=3")
-chrome_options.add_argument("--silent")
-chrome_options.add_argument("--output=/dev/null")
+ruta=str(Path(__file__).absolute())
+ruta=ruta.replace("\\","/")
+ruta=ruta.replace(ruta.split("/")[-2]+"/"+ruta.split("/")[-1],"")
 
-path = './chromedriver'
+sys.path.append(ruta)
 
-driver = webdriver.Chrome(options=chrome_options, executable_path= path)
+from Global.imports import *
 
 url = 'https://simple.ripley.cl'
 
@@ -40,8 +22,9 @@ for category in categories.find_elements_by_tag_name('a'):
         print('Categoría: ',category.get_attribute('aria-label'))
         category.click()
         delay(1)
-        subcategories = driver.find_element_by_xpath('//div[@class="category-tree__expanded-categories"]').text
-        print('Subcategoría: ',subcategories)
+        for subcategories in driver.find_elements_by_xpath('//ul[@class="category-tree__expanded-category"]'):
+            subcategory = subcategories.find_element_by_tag_name('a').text
+            print('Subcategoría: ',subcategory)
         back = driver.find_element_by_xpath('//a[@class="tree-node-back-button"]')
         back.click()
         delay(1)

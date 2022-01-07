@@ -22,6 +22,7 @@ elif sys.platform == "win32":
 SERVIDOR='http://villaloscisnesnavidad.epizy.com'
 
 chrome_options = Options()
+"""
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--headless")
@@ -33,7 +34,7 @@ chrome_options.add_argument("--disable-logging")
 chrome_options.add_argument("--disable-dev-shm-usage")
 chrome_options.add_argument("--log-level=3")
 chrome_options.add_argument("--silent")
-chrome_options.add_argument("--output=/dev/null")
+chrome_options.add_argument("--output=/dev/null")"""
 
 
 driver = webdriver.Chrome(options=chrome_options, executable_path= path)
