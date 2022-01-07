@@ -9,24 +9,38 @@ sys.path.append(ruta)
 
 from Global.imports import *
 
-url = 'https://simple.ripley.cl'
+def extractData(linkProduct, brand):
+    data = requests.get(linkProduct)
+    data=data.content
+    data=b(data,"lxml")
+    
+    categories = data.find('div', {"class":"container"}).text
+    print(categories)
+    name=data.find('section',{"class":"product-header"}).find('h1').text
+    print(brand)
+    print(name)
+    id=data.find('span',{"class":"sku"}).text
+    print(id)
+    
+    normal=""
+    internet=""
+    ripley=""
 
-driver.get(url)
-menu = driver.find_element_by_xpath('//div[@class="menu-button"]')
-menu.click()
-delay(1)
+    if data.find('div',{"class":"product-normal-price"}):
+        normal = data.find('div',{"class":"product-normal-price"}).text.strip("Normal")
+    else:
+        normal = 0
+    print(normal)
+    if data.find('div',{"class":"product-internet-price"}) or data.find('div',{"class":"product-internet-price-not-best"}):
+        internet = data.find('div',{"class":"product-internet-price"}).text.strip("Internet") or data.find('div',{"class":"product-internet-price-not-best"}).text.strip("Internet")
+    else:
+        internet = 0
+    print(internet)
+    if data.find('div',{"class":"product-ripley-price"}):
+        ripley = data.find('div',{"class":"product-ripley-price"}).text.strip("Tarjeta Ripley o Chek")
+    else:
+        ripley = 0
+    print(ripley)
 
-categories = driver.find_element_by_xpath('//div[@class="tree-node-items"]')
-for category in categories.find_elements_by_tag_name('a'):
-    try:
-        print('Categoría: ',category.get_attribute('aria-label'))
-        category.click()
-        delay(1)
-        for subcategories in driver.find_elements_by_xpath('//ul[@class="category-tree__expanded-category"]'):
-            subcategory = subcategories.find_element_by_tag_name('a').text
-            print('Subcategoría: ',subcategory)
-        back = driver.find_element_by_xpath('//a[@class="tree-node-back-button"]')
-        back.click()
-        delay(1)
-    except:
-        print('done')
+linkProduct = 'https://simple.ripley.cl/taste-of-the-wild-prey-turkey-formula-for-dogs-1136-kgs-mpm00018161064?s=mdco'
+brand = "Hola"

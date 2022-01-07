@@ -39,7 +39,7 @@ chrome_options.add_argument("--output=/dev/null")
 
 driver = webdriver.Chrome(options=chrome_options, executable_path= path)
 driver2 = webdriver.Chrome(executable_path= path)
-driver2.close()
+#driver2.close()
 
 def escribir(txt):
     wr=open("falabella.html","w")
