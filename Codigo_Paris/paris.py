@@ -40,12 +40,16 @@ def Get_Producto(url):
     
     NOMBRE=soup.find('h1',{'class':'no-pb js-product-name'}).text.strip('\n')
 
-    CATEGORIAS=soup.find_all('a',{'class':'breadcrumb-element'})
-    print(CATEGORIAS)
+    CATEGORIAS_=soup.find_all('a',{'class':'breadcrumb-element'})
+    CATEGORIAS=""
+    for categoria in CATEGORIAS_:
+        CATEGORIAS+=categoria.find('span').text+";"
+    
 
-    print(PRECIOS)
+    #print(PRECIOS)
     print(ID)
     print(NOMBRE)
+    print(CATEGORIAS)
 
 
 
