@@ -9,8 +9,6 @@ sys.path.append(ruta)
 
 from Global.imports import *
 
-
-
 def escribir(txt):
     wr=open("falabella.html","w")
     wr.write(txt)
@@ -100,133 +98,50 @@ def extraerdatos(pagina):
     DESCRIPCION=""
     for tabla in resultado.find_all('tr',{"class":"jsx-428502957"}):
         for dato in tabla.find_all('td',{"class":"jsx-428502957"}):
-            DESCRIPCION+=dato.text+";"
-        DESCRIPCION+="\n"
+            DESCRIPCION+=dato.text+" "
+        DESCRIPCION+="%0A"
 
-    subir("Falabella",ID,Nombre,Marca,PRECIO,PRECIO2,PRECIO3,DESCRIPCION,CATEGORIA,pagina,";")
-    
-
-
-def extract(url):
-    driver.get(url)
-    WebDriverWait(driver, 2)
-
-    #print("Entro!")
-
-    body = driver.execute_script("return document.body")
-    source = body.get_attribute('innerHTML')
-    soup = b(source, "html.parser")
-     
-    i=0
-    if soup.find_all('a',{"class":"jsx-4221770651"}) or soup.find_all('a',{"class":"jsx-3128226947"}) or soup.find_all('a',{"class":"jsx-4001457643"}) or soup.find_all('a',{"class":"jsx-2764557706"}):
-        try:
-            for dat in soup.find_all('a',{"class":"jsx-4221770651"}):
-                i+=1
-                extraerdatos(dat["href"])
-                print(i)
-        except Exception as e:
-            print(e)
-            print("Modo 1 no funciono")
-
-        try:
-            for dat in soup.find_all('a',{"class":"jsx-2764557706"}):
-                i+=1
-                extraerdatos(dat["href"])
-                print(i)
-        except Exception as e:
-            print(e)
-            print("Modo 2 no funciono")
-        try:
-            for dat in soup.find_all('a',{"class":"jsx-3128226947"}):
-                i+=1
-                extraerdatos(dat["href"])
-                print(i)
-        except Exception as e:
-            print(e)
-            print("Modo 3 no funciono")
-
-        try:
-            for dat in soup.find_all('a',{"class":"jsx-4001457643"}):
-                i+=1
-                extraerdatos(dat["href"])
-                print(i)
-        except Exception as e:
-            print(e)
-            print("Modo 4 no funciono")
-
-        
-        return True
-    else:
-        return False
-
-def extraer_all(url,n):
-    i=n
-    try:
-        for i in range(n,999):
+def changePage(links):
+    n=0
+    for link in links:
+        print(link)
+        for i in range(1,999):
+            urlCategory = link + str(i)
+            driver.get(urlCategory)
+            WebDriverWait(driver, 2)
             print(i)
-            print("Categoria: "+url.strip("https://www.falabella.com/falabella-cl/category/cat")+str(i))
-            url2=url+str(i)
+            body = driver.execute_script("return document.body")
+            source = body.get_attribute('innerHTML')
+            data = b(source, "html.parser")
 
-            if not extract(url2):
-                break
-    finally:
-        return i
 
-def leer_ant():
-    data=None
-    if os.path.exists("estado.json"):
-        with open("estado.json", "r") as read_file:
-            data = json.load(read_file)
-        #os.remove("estado.json")
-    return data
 
-def categoria(url):
-    data_=leer_ant()
-    try:
-        for cat in ["cat","CATG"]:
-            n=1000
-            n2=1
-            if data_:
-                cat=data_["CAT"]
-                n=data_["N_CAT"]
-                n2=data_["N_Page"]
-            for i in range(n,9999999999):
-                for i2 in range(4):
-                    data={"CAT":cat,"N_CAT":i,"N_Page":1}
-                    url2=url.format(cate=cat,categoria=i)
-                    print(url2)
 
-                    driver.get(url2+str(1))
-                    WebDriverWait(driver, 2)
 
-                    body = driver.execute_script("return document.body")
-                    source = body.get_attribute('innerHTML')
-                    respuesta = b(source, "html.parser")
-
-                    
-
-                    if respuesta.find_all('a',{"class":"jsx-4221770651"}) or respuesta.find_all('a',{"class":"jsx-3128226947"}) or respuesta.find_all('a',{"class":"jsx-4001457643"}) or respuesta.find_all('a',{"class":"jsx-2764557706"}):
-                        print("Existe:",url2,"Pag",i)
-                        N_page=extraer_all(url2,n2)
-                        data["N_Page"]=N_page
-                        n2=1
-                        break
-                    else:
-                        print("Not Found:",cat,"Pag",i)
-                delay(0.01)
-            if data_:
-                data_=None
+def extractCategoryLink(url):
+    driver2.get(url)
+    menu = driver2.find_element_by_xpath('//span[@class="MarketplaceHamburgerBtn-module_title__2KG47"]')
+    menu.click()
+    delay(1)
+    links=[]
+    categories = driver2.find_elements_by_xpath('//div[@class="TaxonomyDesktop-module_categoryWrapper__3YBaF"]')
+    for category in categories:
+        try:
+            category.click()
+            delay(1)
+            subcategories = driver2.find_element_by_xpath('//div[@class="SecondLevelCategories-module_secondLevelMenuItemsBox__2i00Y"]')
+            for subcategory in subcategories.find_elements_by_tag_name('a'):
+                if not 'collection' in subcategory.get_attribute('href'):
+                    links.append(subcategory.get_attribute('href') + '?page=')
+                    print(subcategory.get_attribute('href'))
+            delay(1)
+        except:
+            print('done')
+    changePage(links)
             
-                
-    except:
-        with open("estado.json", "w") as write_file:
-            json.dump(data, write_file)
-            
-
-
-url="https://www.falabella.com/falabella-cl/category/{cate}{categoria}?page="
+url = 'https://www.falabella.com/falabella-cl/category/cat2018'
 
 while True:
-    categoria(url)
+    extractCategoryLink(url)
 
 driver.close()

@@ -13,31 +13,40 @@ def extractData(linkProducts, brand):
     data = requests.get(linkProducts)
     data=data.content
     data=b(data,"lxml")
-    
-    categories = data.find('div', {"class":"container"}).text
-    name=data.find('section',{"class":"product-header"}).find('h1').text
-    print(name)
-    id=data.find('span',{"class":"sku"}).text
-    
-    normal=""
-    internet=""
-    ripley=""
+    send = False
 
-    if data.find('div',{"class":"product-normal-price"}):
-        normal = data.find('div',{"class":"product-normal-price"}).text.strip("Normal")
-    else:
-        normal = 0
-    if data.find('div',{"class":"product-internet-price"}) or data.find('div',{"class":"product-internet-price-not-best"}):
-        if data.find('div',{"class":"product-internet-price"}):
-            internet = data.find('div',{"class":"product-internet-price"}).text.strip("Internet")
-        else:
-            internet = data.find('div',{"class":"product-internet-price-not-best"}).text.strip("Internet")
-    else:
-        internet = 0
-    if data.find('div',{"class":"product-ripley-price"}):
-        ripley = data.find('div',{"class":"product-ripley-price"}).text.strip("Tarjeta Ripley o Chek")
-    else:
-        ripley = 0
+    for i in range(0,4):
+        try:
+            categories = data.find('li', {"class":"breadcrumbs"}).text
+            name=data.find('section',{"class":"product-header"}).find('h1').text
+            print(categories)
+            id=data.find('span',{"class":"sku"}).text
+            
+            normal=""
+            internet=""
+            ripley=""
+
+            if data.find('div',{"class":"product-normal-price"}):
+                normal = data.find('div',{"class":"product-normal-price"}).text.strip("Normal")
+            else:
+                normal = 0
+            if data.find('div',{"class":"product-internet-price"}) or data.find('div',{"class":"product-internet-price-not-best"}):
+                if data.find('div',{"class":"product-internet-price"}):
+                    internet = data.find('div',{"class":"product-internet-price"}).text.strip("Internet")
+                else:
+                    internet = data.find('div',{"class":"product-internet-price-not-best"}).text.strip("Internet")
+            else:
+                internet = 0
+            if data.find('div',{"class":"product-ripley-price"}):
+                ripley = data.find('div',{"class":"product-ripley-price"}).text.strip("Tarjeta Ripley o Chek")
+            else:
+                ripley = 0
+            send = True
+            break
+        except Exception as error:
+            print(error)
+            delay(1)
+    print(send)
     
     """resultado=data.find('section',{"class":"jsx-1944012472"})
     i=1
@@ -55,21 +64,29 @@ def extractData(linkProducts, brand):
 def changePage(links):
     n=0
     for link in links:
-        for i in range(1,999):
+        print(link)
+        for i in range(9,999):
             urlCategory = link + str(i)
-            data = requests.get(urlCategory)
-            data=data.content
-            data=b(data,"lxml")
-            for linkProduct in data.find_all('a',{"class":"catalog-product-item"}):
-                n+=1
-                if linkProduct:
-                    brand = linkProduct.find('div', {"class":"brand-logo"}).text
-                    linkProducts = 'https://simple.ripley.cl' + linkProduct["href"] + '?&s=mdco'
-                    extractData(linkProducts,brand)
-                    print(n)
-                else:
-                    print("página no encontrada")
-            data = None
+            driver.get(urlCategory)
+            WebDriverWait(driver, 2)
+            print(i)
+            body = driver.execute_script("return document.body")
+            source = body.get_attribute('innerHTML')
+            data = b(source, "html.parser")
+            if data.find('section',{"class":"catalog-grid"}):
+                for linkProduct in data.find_all('a',{"class":"catalog-product-item"}):
+                    n+=1
+                    if linkProduct:
+                        brand = linkProduct.find('div', {"class":"brand-logo"}).text
+                        linkProducts = 'https://simple.ripley.cl' + linkProduct["href"] + '?&s=mdco'
+                        print(linkProducts)
+                        extractData(linkProducts,brand)
+                        print(n)
+                    else:
+                        print("página no encontrada")
+            else:
+                break
+
 
 def extractCategoryLink(url):
     driver2.get(url)
@@ -91,7 +108,7 @@ def extractCategoryLink(url):
         except:
             print('done')
     changePage(links)
-    #driver2.close()
+    driver2.close()
 
 
 url = 'https://simple.ripley.cl'

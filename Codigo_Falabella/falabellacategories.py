@@ -11,18 +11,18 @@ from Global.imports import *
 
 url = 'https://www.falabella.com/falabella-cl/category/cat2018/Celulares-y-Telefonos'
 
-driver.get(url)
-menu = driver.find_element_by_xpath('//span[@class="MarketplaceHamburgerBtn-module_title__2KG47"]')
+driver2.get(url)
+menu = driver2.find_element_by_xpath('//span[@class="MarketplaceHamburgerBtn-module_title__2KG47"]')
 menu.click()
 delay(1)
 #<div class="MediaComponent-module_tablet-desktop__3xCIl"><span class="MarketplaceHamburgerBtn-module_title__2KG47">
 
-categories = driver.find_elements_by_xpath('//div[@class="TaxonomyDesktop-module_categoryWrapper__3YBaF"]')
+categories = driver2.find_elements_by_xpath('//div[@class="TaxonomyDesktop-module_categoryWrapper__3YBaF"]')
 for category in categories:
     print(category.text)
     category.click()
     delay(1)
-    links = driver.find_element_by_xpath('//div[@class="SecondLevelCategories-module_secondLevelMenuItemsBox__2i00Y"]')
+    links = driver2.find_element_by_xpath('//div[@class="SecondLevelCategories-module_secondLevelMenuItemsBox__2i00Y"]')
     for link in links.find_elements_by_tag_name('a'):
         print(link.get_attribute('href'))
     delay(1)
